@@ -1,7 +1,6 @@
+import 'package:expense_tracker/models/category_icons.dart';
 import 'package:expense_tracker/models/expense.dart';
-import 'package:expense_tracker/utils/category_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class ExpenseItem extends StatelessWidget {
   const ExpenseItem(
@@ -27,9 +26,9 @@ class ExpenseItem extends StatelessWidget {
                 Text(
                     '${expense.amount.toStringAsFixed(2).replaceAll('.', ',')} €'),
                 const Spacer(),
-                Icon(getCategoryIconData(expense.category)),
+                Icon(categoryIcons[expense.category]),
                 const SizedBox(width: 5),
-                Text(DateFormat('dd.MM.yyyy').format(expense.date)),
+                Text(expense.formattedDate),
                 // Text(toBeginningOfSentenceCase(expense.category.name)),
               ],
             ),
