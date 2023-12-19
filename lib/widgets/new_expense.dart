@@ -101,7 +101,7 @@ class _NewExpenseState extends State<NewExpense> {
     var showDateError =
         _selectedDate == null && _hasBeenSubmitted && !_isDateValid;
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
       child: Form(
         key: _formKey,
         child: Column(
