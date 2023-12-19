@@ -4,7 +4,9 @@ import 'package:expense_tracker/models/category_type.enum.dart';
 import 'package:intl/intl.dart';
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.onAddExpense});
+
+  final void Function(Expense expense) onAddExpense;
 
   @override
   State<NewExpense> createState() => _NewExpenseState();
@@ -82,11 +84,14 @@ class _NewExpenseState extends State<NewExpense> {
     var isRestOfFormValid = _formKey.currentState!.validate();
     // both date and rest of form need to be evaluated
     if (_validateDate(_selectedDate) == null && isRestOfFormValid) {
-      // Form is valid, proceed with your logic here
-      print(_titleController.text.trim());
-      print(_amountController.text.trim());
-      print(_selectedDate);
-      print(_selectedCategory);
+      // Form is valid, add expense
+      widget.onAddExpense(Expense(
+        title: _titleController.text.trim(),
+        amount:
+            double.parse(_amountController.text.trim().replaceAll(',', '.')),
+        date: _selectedDate!,
+        category: _selectedCategory,
+      ));
       _closeModal();
     }
   }
