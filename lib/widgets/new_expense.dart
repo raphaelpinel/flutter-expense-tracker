@@ -121,8 +121,10 @@ class _NewExpenseState extends State<NewExpense> {
             ),
             Row(
               children: [
-                Expanded(
+                SizedBox(
+                  width: 100,
                   child: TextFormField(
+                    
                     keyboardType: TextInputType.number,
                     controller: _amountController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -134,7 +136,7 @@ class _NewExpenseState extends State<NewExpense> {
                     validator: _validateAmount,
                   ),
                 ),
-                const SizedBox(width: 15),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -170,6 +172,7 @@ class _NewExpenseState extends State<NewExpense> {
                 Expanded(
                   child: DropdownButtonFormField<CategoryType>(
                     value: _selectedCategory,
+                    style: Theme.of(context).textTheme.bodyMedium,
                     onChanged: (newValue) {
                       if (newValue == null) {
                         return;

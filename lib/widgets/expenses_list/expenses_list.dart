@@ -17,13 +17,16 @@ class ExpensesList extends StatelessWidget {
         return Dismissible(
           key: ValueKey(expenses[index]),
           direction: DismissDirection.endToStart,
-          background: Container(
-            color: Colors.red,
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 16.0),
-            child: const Icon(
-              Icons.delete,
-              color: Colors.white,
+          background: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Container(
+              color: Theme.of(context).colorScheme.error,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 16.0),
+              child: const Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
             ),
           ),
           onDismissed: (direction) {
