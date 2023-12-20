@@ -52,46 +52,47 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
-    Widget mainContent = _registeredExpenses.isEmpty
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ImageIcon(
-                  const AssetImage('assets/images/expense_1.png'),
-                  color: Colors.grey[300],
-                  size: 200,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('No expenses found.',
-                        style: TextStyle(fontSize: 18)),
-                    TextButton(
-                        onPressed: _openAddExpenseOverlay,
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-                        ),
-                        child: const Row(
-                          children: [
-                            Icon(Icons.add, color: Colors.blueAccent),
-                            Text(
-                              'Add one!',
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.blueAccent),
-                            ),
-                          ],
-                        )),
-                  ],
-                ),
-              ],
-            ),
-          )
-        : ExpensesList(
-            expenses: _registeredExpenses,
-            onDeleteExpense: _deleteExpense,
-          );
+    Widget mainContent = Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ImageIcon(
+            const AssetImage('assets/images/expense_1.png'),
+            color: Colors.grey[300],
+            size: 200,
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('No expenses found.', style: TextStyle(fontSize: 18)),
+              TextButton(
+                  onPressed: _openAddExpenseOverlay,
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.add, color: Colors.blueAccent),
+                      Text(
+                        'Add one!',
+                        style:
+                            TextStyle(fontSize: 18, color: Colors.blueAccent),
+                      ),
+                    ],
+                  )),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    if (_registeredExpenses.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses: _registeredExpenses,
+        onDeleteExpense: _deleteExpense,
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
