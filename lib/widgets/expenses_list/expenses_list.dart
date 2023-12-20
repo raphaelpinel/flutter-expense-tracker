@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 
 class ExpensesList extends StatelessWidget {
   const ExpensesList(
-      {super.key, required this.expenses, required this.onDeleteExpense});
+      {super.key,
+      required this.expenses,
+      required this.onDeleteExpense,
+      required this.onOpenEditExpense});
 
   final List<Expense> expenses;
   final void Function(Expense expense) onDeleteExpense;
+  final void Function(Expense expense) onOpenEditExpense;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,11 @@ class ExpensesList extends StatelessWidget {
           onDismissed: (direction) {
             onDeleteExpense(expenses[index]);
           },
-          child: ExpenseItem(expenses[index]),
+          child: InkWell(
+              onTap: () {
+                onOpenEditExpense(expenses[index]);
+              },
+              child: ExpenseItem(expenses[index])),
         );
       },
     );

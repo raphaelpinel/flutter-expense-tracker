@@ -1,4 +1,5 @@
 import 'package:expense_tracker/widgets/chart/chart.dart';
+import 'package:expense_tracker/widgets/edit_expense.dart';
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/models/category_type.enum.dart';
 import 'package:expense_tracker/models/expense.dart';
@@ -34,6 +35,16 @@ class _ExpensesState extends State<Expenses> {
   void _addExpense(Expense expense) {
     setState(() {
       _registeredExpenses.add(expense);
+    });
+  }
+
+  void _saveExpense(Expense expense) {
+    // find expense in list and replace it
+    final expenseToEdit = _registeredExpenses
+        .firstWhere((registeredExpense) => registeredExpense.id == expense.id);
+    final expenseIndex = _registeredExpenses.indexOf(expenseToEdit);
+    setState(() {
+      _registeredExpenses[expenseIndex] = expense;
     });
   }
 
@@ -79,6 +90,15 @@ class _ExpensesState extends State<Expenses> {
     );
   }
 
+  void _openEditExpenseOverlay(Expense expense) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) =>
+          EditExpense(expense: expense, onSaveExpense: _saveExpense),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget mainContent = Center(
@@ -120,6 +140,9 @@ class _ExpensesState extends State<Expenses> {
       mainContent = ExpensesList(
         expenses: _registeredExpenses,
         onDeleteExpense: _deleteExpense,
+        onOpenEditExpense: (Expense expense) {
+          _openEditExpenseOverlay(expense);
+        },
       );
     }
 

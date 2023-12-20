@@ -11,8 +11,9 @@ class Expense {
       {required this.title,
       required this.amount,
       required this.date,
-      this.category = CategoryType.other})
-      : id = const Uuid().v4();
+      this.category = CategoryType.other,
+      String? id})
+      : id = id ?? const Uuid().v4();
 
   final String id;
   final String title;
