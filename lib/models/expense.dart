@@ -24,3 +24,19 @@ class Expense {
     return formatter.format(date);
   }
 }
+
+class ExpenseBucket {
+  ExpenseBucket({required this.expenses, required this.categoryType});
+
+  ExpenseBucket.forCategory(allExpenses, this.categoryType)
+      : expenses = allExpenses
+            .where((expense) => expense.category == categoryType)
+            .toList();
+
+  final CategoryType categoryType;
+  final List<Expense> expenses;
+
+  double get totalAmount {
+    return expenses.fold(0, (sum, expense) => sum + expense.amount);
+  }
+}
