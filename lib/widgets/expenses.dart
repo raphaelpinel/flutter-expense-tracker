@@ -36,10 +36,38 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
-  void _deleteExpense(String expenseId) {
+  void _deleteExpense(Expense expenseToDelete) {
+    final expenseIndex = _registeredExpenses.indexOf(expenseToDelete);
     setState(() {
-      _registeredExpenses.removeWhere((expense) => expense.id == expenseId);
+      _registeredExpenses.removeWhere((expense) => expense == expenseToDelete);
     });
+    var snackbar = SnackBar(
+      backgroundColor: Colors.green,
+      duration: const Duration(seconds: 5),
+      content: const Row(
+        children: [
+          Text(
+            'Expense deleted',
+            style: TextStyle(color: Colors.white),
+          ),
+          SizedBox(width: 10),
+          Icon(
+            Icons.check,
+            color: Colors.white,
+          )
+        ],
+      ),
+      action: SnackBarAction(
+        label: 'UNDO',
+        textColor: Colors.white,
+        onPressed: () {
+          setState(() {
+            _registeredExpenses.insert(expenseIndex, expenseToDelete);
+          });
+        },
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   void _openAddExpenseOverlay() {

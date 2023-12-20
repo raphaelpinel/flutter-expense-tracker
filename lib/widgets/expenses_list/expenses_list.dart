@@ -7,7 +7,7 @@ class ExpensesList extends StatelessWidget {
       {super.key, required this.expenses, required this.onDeleteExpense});
 
   final List<Expense> expenses;
-  final void Function(String expenseId) onDeleteExpense;
+  final void Function(Expense expense) onDeleteExpense;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class ExpensesList extends StatelessWidget {
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         return Dismissible(
-          key: Key(expenses[index].id),
+          key: ValueKey(expenses[index]),
           direction: DismissDirection.endToStart,
           background: Container(
             color: Colors.red,
@@ -27,7 +27,7 @@ class ExpensesList extends StatelessWidget {
             ),
           ),
           onDismissed: (direction) {
-            onDeleteExpense(expenses[index].id);
+            onDeleteExpense(expenses[index]);
           },
           child: ExpenseItem(expenses[index]),
         );
