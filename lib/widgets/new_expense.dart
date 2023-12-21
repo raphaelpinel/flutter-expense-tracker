@@ -108,7 +108,7 @@ class _NewExpenseState extends State<NewExpense> {
       child: SingleChildScrollView(
         child: Padding(
           padding:
-              EdgeInsets.fromLTRB(20, 50, 20, keyboardInsertedContent + 20),
+              EdgeInsets.fromLTRB(20, 10, 20, keyboardInsertedContent + 20),
           child: Form(
             key: _formKey,
             child: Column(
