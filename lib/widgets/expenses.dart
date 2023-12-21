@@ -101,6 +101,9 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final isLandscape = deviceWidth > 600;
+
     Widget mainContent = Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -146,6 +149,13 @@ class _ExpensesState extends State<Expenses> {
       );
     }
 
+    List<Widget> children = [
+      Expanded(child: Chart(expenses: _registeredExpenses)),
+      Expanded(
+        child: mainContent,
+      ),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Tracker'),
@@ -156,15 +166,7 @@ class _ExpensesState extends State<Expenses> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(
-            child: mainContent,
-          )
-        ],
-      ),
-      // Your widget code here
+      body: isLandscape ? Row(children: children) : Column(children: children),
     );
   }
 }
