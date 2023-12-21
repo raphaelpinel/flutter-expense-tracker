@@ -17,6 +17,7 @@ void main() {
   runApp(
     MaterialApp(
       darkTheme: ThemeData.dark().copyWith(
+        dividerColor: Colors.transparent,
         colorScheme: kDarkColorScheme,
         appBarTheme: const AppBarTheme().copyWith(
             // backgroundColor: kDarkColorScheme.onPrimaryContainer,
@@ -70,6 +71,7 @@ void main() {
                 fontFamily: 'Lato'),
       ),
       theme: ThemeData().copyWith(
+        dividerColor: Colors.transparent,
         colorScheme: kColorScheme,
         appBarTheme: const AppBarTheme().copyWith(
             backgroundColor: kColorScheme.onPrimaryContainer,

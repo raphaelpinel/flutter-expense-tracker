@@ -149,12 +149,6 @@ class _ExpensesState extends State<Expenses> {
       );
     }
 
-    List<Widget> children = [
-      Expanded(child: Chart(expenses: _registeredExpenses)),
-      Expanded(
-        child: mainContent,
-      ),
-    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -166,7 +160,26 @@ class _ExpensesState extends State<Expenses> {
           )
         ],
       ),
-      body: isLandscape ? Row(children: children) : Column(children: children),
+      body: isLandscape
+          ? Row(children: [
+              Expanded(child: (Chart(expenses: _registeredExpenses))),
+              Expanded(
+                child: mainContent,
+              ),
+            ])
+          : Column(children: [
+              ExpansionTile(
+                initiallyExpanded: true,
+                title: Text('Chart',
+                    style: Theme.of(context).textTheme.titleMedium),
+                children: <Widget>[
+                  (Chart(expenses: _registeredExpenses)),
+                ],
+              ),
+              Expanded(
+                child: mainContent,
+              ),
+            ]),
     );
   }
 }
