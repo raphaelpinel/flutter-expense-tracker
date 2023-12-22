@@ -137,6 +137,7 @@ class _ExpensesState extends State<Expenses> {
     );
 
     if (_registeredExpenses.isNotEmpty) {
+      _registeredExpenses.sort((a, b) => a.date.compareTo(b.date));
       mainContent = ExpensesList(
         expenses: _registeredExpenses,
         onDeleteExpense: _deleteExpense,
