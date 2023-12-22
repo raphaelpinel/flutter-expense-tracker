@@ -1,5 +1,4 @@
 import 'package:expense_tracker/widgets/chart/chart.dart';
-import 'package:expense_tracker/widgets/edit_expense.dart';
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/models/category_type.enum.dart';
 import 'package:expense_tracker/models/expense.dart';
@@ -38,7 +37,7 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
-  void _saveExpense(Expense expense) {
+  void _editExpense(Expense expense) {
     // find expense in list and replace it
     final expenseToEdit = _registeredExpenses
         .firstWhere((registeredExpense) => registeredExpense.id == expense.id);
@@ -82,22 +81,16 @@ class _ExpensesState extends State<Expenses> {
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
-  void _openAddExpenseOverlay() {
+  void _openAddEditExpenseOverlay(
+      {required bool isNewExpense, Expense? expense}) {
     showModalBottomSheet(
       useSafeArea: true,
       isScrollControlled: true,
       context: context,
-      builder: (context) => NewExpense(onAddExpense: _addExpense),
-    );
-  }
-
-  void _openEditExpenseOverlay(Expense expense) {
-    showModalBottomSheet(
-      useSafeArea: true,
-      isScrollControlled: true,
-      context: context,
-      builder: (context) =>
-          EditExpense(expense: expense, onSaveExpense: _saveExpense),
+      builder: (context) => AddEditExpense(
+          onSaveExpense: isNewExpense ? _addExpense : _editExpense,
+          expense: expense,
+          isNewExpense: isNewExpense),
     );
   }
 
@@ -121,7 +114,9 @@ class _ExpensesState extends State<Expenses> {
             children: [
               const Text('No expenses found.', style: TextStyle(fontSize: 18)),
               TextButton(
-                  onPressed: _openAddExpenseOverlay,
+                  onPressed: () {
+                    _openAddEditExpenseOverlay(isNewExpense: true);
+                  },
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
                   ),
@@ -146,18 +141,19 @@ class _ExpensesState extends State<Expenses> {
         expenses: _registeredExpenses,
         onDeleteExpense: _deleteExpense,
         onOpenEditExpense: (Expense expense) {
-          _openEditExpenseOverlay(expense);
+          _openAddEditExpenseOverlay(expense: expense, isNewExpense: false);
         },
       );
     }
-
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Tracker'),
         actions: [
           IconButton(
-            onPressed: _openAddExpenseOverlay,
+            onPressed: () {
+              _openAddEditExpenseOverlay(isNewExpense: true);
+            },
             icon: const Icon(Icons.add),
           )
         ],
