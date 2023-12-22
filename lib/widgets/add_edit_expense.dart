@@ -327,7 +327,7 @@ class _AddEditExpenseState extends State<AddEditExpense> {
                             child: const Text('Cancel')),
                         ElevatedButton(
                           onPressed: _submitForm,
-                          child: const Text('Add Expense'),
+                          child: Text(submitButtonText),
                         ),
                       ],
                     )
