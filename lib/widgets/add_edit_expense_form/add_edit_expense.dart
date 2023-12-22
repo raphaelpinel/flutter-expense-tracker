@@ -1,3 +1,7 @@
+import 'package:expense_tracker/widgets/add_edit_expense_form/amount_form_field.dart';
+import 'package:expense_tracker/widgets/add_edit_expense_form/category_selector.dart';
+import 'package:expense_tracker/widgets/add_edit_expense_form/date_selector.dart';
+import 'package:expense_tracker/widgets/add_edit_expense_form/title_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:expense_tracker/models/category_type.enum.dart';
@@ -22,19 +26,12 @@ class _AddEditExpenseState extends State<AddEditExpense> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
+
   DateTime? _selectedDate;
   CategoryType _selectedCategory = CategoryType.other;
   var _hasBeenSubmitted = false;
   var _isDateValid = false;
   String submitButtonText = 'Save';
-
-  final List<DropdownMenuItem<CategoryType>> _categoryOptionsItems =
-      CategoryType.values
-          .map((category) => DropdownMenuItem(
-                value: category,
-                child: Text(toBeginningOfSentenceCase(category.name)),
-              ))
-          .toList();
 
   @override
   void initState() {
@@ -50,20 +47,16 @@ class _AddEditExpenseState extends State<AddEditExpense> {
     }
   }
 
-  void _presentDatePicker() async {
-    final now = DateTime.now();
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: now,
-      firstDate: now.subtract(const Duration(days: 365)),
-      lastDate: now,
-    );
+  void onDateChanged(DateTime date) {
+    setState(() {
+      _selectedDate = date;
+    });
+  }
 
-    if (pickedDate != null) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    }
+  void onCategoryChanged(CategoryType category) {
+    setState(() {
+      _selectedCategory = category;
+    });
   }
 
   @override
@@ -75,17 +68,6 @@ class _AddEditExpenseState extends State<AddEditExpense> {
 
   void _closeModal() {
     Navigator.pop(context);
-  }
-
-  String? _validateAmount(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter an amount';
-    }
-    final amount = double.tryParse(value.replaceAll(',', '.'));
-    if (amount == null || amount <= 0) {
-      return 'Please enter a valid amount';
-    }
-    return null;
   }
 
   String? _validateDate(DateTime? value) {
@@ -146,96 +128,34 @@ class _AddEditExpenseState extends State<AddEditExpense> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: TextFormField(
-                            controller: _titleController,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: const InputDecoration(
-                                labelText: 'Title', hintText: 'Title'),
-                            maxLength: 50,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter a title';
-                              }
-                              return null;
-                            },
-                          ),
+                          child:
+                              TitleFormField(titleController: _titleController),
                         ),
-                        const SizedBox(width: 24),
+                        const SizedBox(width: 2),
                         Expanded(
-                          // width: 100,
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            controller: _amountController,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: const InputDecoration(
-                                labelText: 'Amount', suffixText: '€'),
-                            validator: _validateAmount,
-                          ),
+                          child: AmountFormField(
+                              amountController: _amountController),
                         ),
                       ],
                     ),
                   ] else ...[
-                    TextFormField(
-                      controller: _titleController,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      decoration: const InputDecoration(label: Text('Title')),
-                      maxLength: 50,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a title';
-                        }
-                        return null;
-                      },
-                    ),
+                    TitleFormField(titleController: _titleController),
                   ],
                   if (isLargeWidth) ...[
                     Row(
                       children: [
                         Expanded(
-                          child: DropdownButtonFormField<CategoryType>(
-                            value: _selectedCategory,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            onChanged: (newValue) {
-                              if (newValue == null) {
-                                return;
-                              }
-                              setState(() {
-                                _selectedCategory = newValue;
-                              });
-                            },
-                            items: _categoryOptionsItems,
-                            decoration: const InputDecoration(
-                              labelText: 'Category',
-                            ),
+                          child: CategorySelector(
+                            selectedCategory: _selectedCategory,
+                            onCategoryChanged: onCategoryChanged,
                           ),
                         ),
                         const SizedBox(width: 24),
                         Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                showDateError
-                                    ? 'Please select a date'
-                                    : _selectedDate == null
-                                        ? 'No date Selected'
-                                        : formatter.format(_selectedDate!),
-                                style: TextStyle(
-                                  color: showDateError
-                                      ? Theme.of(context).colorScheme.error
-                                      : null,
-                                ),
-                              ),
-                              IconButton(
-                                  icon: const Icon(Icons.calendar_month),
-                                  color: showDateError
-                                      ? Theme.of(context).colorScheme.error
-                                      : null,
-                                  onPressed: _presentDatePicker)
-                            ],
+                          child: DateSelector(
+                            date: _selectedDate,
+                            onDateChanged: onDateChanged,
+                            showDateError: showDateError,
                           ),
                         )
                       ],
@@ -243,43 +163,19 @@ class _AddEditExpenseState extends State<AddEditExpense> {
                   ] else ...[
                     Row(
                       children: [
-                        SizedBox(
-                          width: 100,
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            controller: _amountController,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: const InputDecoration(
-                                label: Text('Amount'), suffixText: '€'),
-                            validator: _validateAmount,
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 150,
                           ),
+                          child: AmountFormField(
+                              amountController: _amountController),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 16),
                         Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                showDateError
-                                    ? 'Please select a date'
-                                    : _selectedDate == null
-                                        ? 'No date Selected'
-                                        : formatter.format(_selectedDate!),
-                                style: TextStyle(
-                                  color: showDateError
-                                      ? Theme.of(context).colorScheme.error
-                                      : null,
-                                ),
-                              ),
-                              IconButton(
-                                  icon: const Icon(Icons.calendar_month),
-                                  color: showDateError
-                                      ? Theme.of(context).colorScheme.error
-                                      : null,
-                                  onPressed: _presentDatePicker)
-                            ],
+                          child: DateSelector(
+                            date: _selectedDate,
+                            onDateChanged: onDateChanged,
+                            showDateError: showDateError,
                           ),
                         )
                       ],
@@ -304,21 +200,9 @@ class _AddEditExpenseState extends State<AddEditExpense> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Expanded(
-                          child: DropdownButtonFormField<CategoryType>(
-                            value: _selectedCategory,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            onChanged: (newValue) {
-                              if (newValue == null) {
-                                return;
-                              }
-                              setState(() {
-                                _selectedCategory = newValue;
-                              });
-                            },
-                            items: _categoryOptionsItems,
-                            decoration: const InputDecoration(
-                              labelText: 'Category',
-                            ),
+                          child: CategorySelector(
+                            selectedCategory: _selectedCategory,
+                            onCategoryChanged: onCategoryChanged,
                           ),
                         ),
                         const SizedBox(width: 16),
